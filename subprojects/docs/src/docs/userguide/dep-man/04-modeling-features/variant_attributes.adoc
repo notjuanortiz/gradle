@@ -1,5 +1,77 @@
-[[abm_declaring_attributes]]
-= Declaring variant attributes
+= Working with Variant Attributes
+
+As explained in the section on <<variant_model.adoc#sec:variant-aware-matching,variant aware matching>>, attributes give semantics to variants and are used to select variants.
+As a user of Gradle, you often do not have to use attributes directly.
+But if, it is helpful to understand the _standard attributes_ defined by Gradle and its core plugins.
+As a plugin author, a deeper understanding of the core
+
+[[using_standard_attributes]]
+== Using standard attributes defined by Gradle
+
+Gradle defines a list of standard attributes used by Gradle's core plugins.
+If you are requiering
+
+QUERY FOR JAVA 8 VERSION
+
+=== Ecosystem-independent standard attributes
+
+-  indicates the purpose of the variant. See the `org.gradle.api.attributes.Usage` class for more details.
+- `org.gradle.status` indicates the kind of release: one of `release` or `integration`.
+- `org.gradle.category` indicates the type of component (library, platform or documentation). This attribute is mostly used to disambiguate Maven POM files derived either as a platform or a library. Value must be a string.
+- `org.gradle.libraryelements` indicates the content of a `org.gradle.category=library` variant, like `jar`, `classes` or `headers-cplusplus`. Value must be a string.
+- `org.gradle.docstype` indicates the documentation type of a `org.gradle.category=documentation` variant, like `javadoc`, `sources` or `doxygen`. Value must be a string.
+- `org.gradle.dependency.bundling` indicates how dependencies of the variant are bundled. Either externally, embedded or shadowed. See the `org.gradle.api.attributes.Bundling` for more details. Value must be a string.
+
+
+.Ecosystem-independent standard variant attributes
+[%header%autowidth,compact]
+|===
+| Attribute name | Description | Implementation | Values | compatibility and disambiguation rules
+
+| `org.gradle.usage`
+| Indicates main purpose of variant
+| link:{javadocPath}/org/gradle/api/attributes/Usage.html[Usage.USAGE_ATTRIBUTE]
+| Constants defined in link:{javadocPath}/org/gradle/api/attributes/Usage.html[Usage]
+| Following ecosystem semantics (e.g. JAVA_RUNTIME can be used in place of JAVA_API)
+
+| `org.gradle.category`
+| Indicates
+| link:{javadocPath}/org/gradle/api/attributes/Usage.html[Usage.USAGE_ATTRIBUTE]
+| Constants defined in link:{javadocPath}/org/gradle/api/attributes/Usage.html[Usage]
+| Following ecosystem semantics (e.g. JAVA_RUNTIME can be used in place of JAVA_API)
+|===
+
+.Ecosystem-independent standard component attributes
+[%header%autowidth,compact]
+|===
+| `org.gradle.status`
+| Component level attribute
+| Handled through [ComponentMetadataDetails.status]
+| Values supported by ComponentMetadataDetails.status]
+| See description of status handling
+|===
+
+
+=== JVM Ecosystem specific attributes
+
+- `org.gradle.jvm.version` indicated the minimal target JVM version of a library. For example is built for java 8, its minimal target is `8`. If it's a multi-release jar for Java 9, 10 and 11, it's minimal target is `9`. Value must be an integer corresponding to the Java version.
+
+=== Native ecosystem specific attributes
+
+- `org.gradle.native.debuggable` indicates native binaries that are debuggable. Value must be a boolean.
+
+
+[[sec:declaring_attributes]]
+== Declaring custom attributes
+
+If you are extending Gradle, e.g. by writing a plugin for another ecosystem, declaring custom attributes could be an option if you want to support variant-aware dependency management features in your plugin.
+However, you should be cautious if you also attempt to publish libraries.
+Semantics of new attributes are usually defined through a plugin, which can carry <<#sec:abm_compatibility_rules,compatibility>> and <<sec:abm_disambiguation_rules,disambiguation>> rules.
+Consequently, builds that consume libraries published for a certain ecosystem, also need to apply the corresponding plugin to interpret attributes correctly.
+If your plugin is intended for a larger audience, i.e. if it is openly available and libraries are published to public repositories, defining new attributes effectively extends the semantics of Gradle Module Metadata and comes with responsibilities.
+E.g., support for attributes that are already published should not be removed again, or should be handled in some kind of compatibility layer in future versions of the plugin.
+
+== Creating attributes in a build script or plugin
 
 Attributes are _typed_. An attribute can be created via the `Attribute<T>.of` method:
 
@@ -35,7 +107,7 @@ include::sample[dir="userguide/dependencyManagement/attributeMatching/snippets/k
 ====
 
 [[sec:abm_compatibility_rules]]
-== Attribute compatibility rules
+=== Attribute compatibility rules
 
 Attributes let the engine select _compatible variants_.
 However, there are cases where a provider may not have _exactly_ what the consumer wants, but still something that it can use.
@@ -48,7 +120,7 @@ The role of a compatibility rule is to explain what variants are _compatible_ wi
 Attribute compatibility rules have to be registered via the link:{javadocPath}/org/gradle/api/attributes/AttributeMatchingStrategy.html[attribute matching strategy] that you can obtain from the link:{javadocPath}/org/gradle/api/attributes/AttributesSchema.html[attributes schema].
 
 [[sec:abm_disambiguation_rules]]
-== Attribute disambiguation rules
+=== Attribute disambiguation rules
 
 Because multiple values for an attribute can be _compatible_ with the requested attribute, Gradle needs to choose between the candidates.
 This is done by implementing an link:{javadocPath}/org/gradle/api/attributes/AttributeDisambiguationRule.html[attribute disambiguation rule].
