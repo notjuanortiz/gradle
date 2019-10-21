@@ -600,16 +600,22 @@ extensions.getByName('samples').configureEach { sample ->
             new File(temporaryDir, 'README-docinfo.html').text = """<meta name="adoc-src-path" content="/../../samples${sample.readMeFile.get().asFile.path - samplesSrcDir.path}">"""
         }
     }
+
+    sample.gradleVersion = project.provider { project.version.toString() }
 }
 
-extensions.getByName('samples').create('javaGradlePlugin') {
-    sampleDirectory = file("src/samples/javaGradlePlugin")
-    description = "Demonstrate how to use the `java-gradle-plugin` core plugin to develop a Gradle plugin."
-    gradleVersion = project.provider { project.version.toString() }
+extensions.getByName('samples').create('groovyBasicApplication') {
+    sampleDirectory = file("src/samples/next-gen/groovy/basic-application")
+    description = "Demonstrate how to build a basic Groovy application."
+}
+
+extensions.getByName('samples').create('javaBasicApplication') {
+    sampleDirectory = file("src/samples/next-gen/java/basic-application")
+    description = "Demonstrate how to build a basic Java application."
 }
 
 tasks.register("publishSamplesToDocsZip", Copy) {
-    dependsOn("asciidocSampleIndex", "assembleJavaGradlePluginSample")
+    dependsOn("asciidocSampleIndex", "assembleJavaBasicApplicationSample", "assembleGroovyBasicApplicationSample")
     from(layout.buildDirectory.dir("gradle-samples"))
     into(new File(docsDir, "samples"))
 }

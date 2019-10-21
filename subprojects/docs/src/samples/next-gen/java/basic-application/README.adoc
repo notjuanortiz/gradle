@@ -1,0 +1,67 @@
+= Basic Java Application Sample
+
+This sample shows how a simple Java application can be built with Gradle.
+The application has no dependencies and the build has minimal configuration.
+
+====
+include::sample[dir="groovy",files="build.gradle[]"]
+include::sample[dir="kotlin",files="build.gradle.kts[]"]
+====
+
+To build and run the application:
+
+====
+[.testable-sample,dir="groovy"]
+=====
+[.sample-command]
+----
+$ ./gradlew assemble
+
+BUILD SUCCESSFUL in 5s
+5 actionable tasks: 5 executed
+$ java -classpath ./build/libs/basic-application-1.0.2.jar org.gradle.sample.Main
+Hello, World!
+----
+=====
+====
+
+To run the distribution (from ZIP file):
+
+====
+[.testable-sample,dir="groovy"]
+=====
+[.sample-command]
+----
+$ unzip ./build/distributions/basic-application-1.0.2.zip
+Archive:  ./build/distributions/basic-application-1.0.2.zip
+   creating: basic-application-1.0.2/
+   creating: basic-application-1.0.2/lib/
+  inflating: basic-application-1.0.2/lib/basic-application-1.0.2.jar
+   creating: basic-application-1.0.2/bin/
+  inflating: basic-application-1.0.2/bin/basic-application
+  inflating: basic-application-1.0.2/bin/basic-application.bat
+$ ./basic-application-1.0.2/bin/basic-application
+Hello, World!
+----
+=====
+====
+
+To run the distribution (from TAR file):
+
+====
+[.testable-sample,dir="groovy"]
+=====
+[.sample-command]
+----
+$ tar -xvpf ./build/distributions/basic-application-1.0.2.tar
+x basic-application-1.0.2/
+x basic-application-1.0.2/lib/
+x basic-application-1.0.2/lib/basic-application-1.0.2.jar
+x basic-application-1.0.2/bin/
+x basic-application-1.0.2/bin/basic-application
+x basic-application-1.0.2/bin/basic-application.bat
+$ ./basic-application-1.0.2/bin/basic-application
+Hello, World!
+----
+=====
+====
