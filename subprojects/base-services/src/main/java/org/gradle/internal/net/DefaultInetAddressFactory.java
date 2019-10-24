@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gradle.internal.remote.internal.inet;
+package org.gradle.internal.net;
 
+import org.gradle.internal.os.OperatingSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -27,8 +31,9 @@ import java.util.List;
 /**
  * Provides information on how two processes on this machine can communicate via IP addresses
  */
-public class InetAddressFactory {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+public class DefaultInetAddressFactory implements InetAddressFactory {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultInetAddressFactory.class);
+
     private final Object lock = new Object();
     private List<InetAddress> communicationAddresses;
     private InetAddress localBindingAddress;
@@ -36,22 +41,46 @@ public class InetAddressFactory {
     private boolean initialized;
     private String hostName;
 
+    @Override
     public String getHostname() {
-        synchronized (lock) {
-            if (hostName == null) {
-                try {
-                    hostName = InetAddress.getLocalHost().getHostName();
-                } catch (UnknownHostException e) {
-                    hostName = getCommunicationAddresses().get(0).toString();
+        if (hostName == null) {
+            synchronized (lock) {
+                // Work around https://bugs.openjdk.java.net/browse/JDK-8143378 on macOS
+                // See also https://stackoverflow.com/a/39698914
+                if (hostName == null && OperatingSystem.current() == OperatingSystem.MAC_OS) {
+                    ProcessBuilder builder = new ProcessBuilder("hostname");
+                    try {
+                        Process process = builder.start();
+                        int result = process.waitFor();
+                        if (result == 0) {
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                            try {
+                                String line = reader.readLine();
+                                if (line != null) {
+                                    hostName = line;
+                                }
+                            } finally {
+                                reader.close();
+                            }
+                        }
+                    } catch (Exception e) {
+                        LOGGER.debug("Couldn't resolve hostname", e);
+                    }
+                }
+
+                if (hostName == null) {
+                    try {
+                        hostName = InetAddress.getLocalHost().getHostName();
+                    } catch (UnknownHostException e) {
+                        hostName = getCommunicationAddresses().get(0).toString();
+                    }
                 }
             }
-            return hostName;
         }
+        return hostName;
     }
 
-    /**
-     * Determines if the IP address can be used for communication with this machine
-     */
+    @Override
     public boolean isCommunicationAddress(InetAddress address) {
         try {
             synchronized (lock) {
@@ -63,11 +92,7 @@ public class InetAddressFactory {
         }
     }
 
-    /**
-     * Locates the possible IP addresses which can be used to communicate with this machine.
-     *
-     * Loopback addresses are preferred.
-     */
+    @Override
     public List<InetAddress> getCommunicationAddresses() {
         try {
             synchronized (lock) {
@@ -79,6 +104,7 @@ public class InetAddressFactory {
         }
     }
 
+    @Override
     public InetAddress getLocalBindingAddress() {
         try {
             synchronized (lock) {
@@ -115,11 +141,12 @@ public class InetAddressFactory {
     }
 
 
+    @Nullable
     private InetAddress findOpenshiftAddresses() {
         for (String key : System.getenv().keySet()) {
             if (key.startsWith("OPENSHIFT_") && key.endsWith("_IP")) {
                 String ipAddress = System.getenv(key);
-                logger.debug("OPENSHIFT IP environment variable {} detected. Using IP address {}.", key, ipAddress);
+                LOGGER.debug("OPENSHIFT IP environment variable {} detected. Using IP address {}.", key, ipAddress);
                 try {
                     return InetAddress.getByName(ipAddress);
                 } catch (UnknownHostException e) {
@@ -135,10 +162,10 @@ public class InetAddressFactory {
         if (inetAddresses.getLoopback().isEmpty()) {
             if (inetAddresses.getRemote().isEmpty()) {
                 InetAddress fallback = InetAddress.getByName(null);
-                logger.debug("No loopback addresses, using fallback {}", fallback);
+                LOGGER.debug("No loopback addresses, using fallback {}", fallback);
                 communicationAddresses.add(fallback);
             } else {
-                logger.debug("No loopback addresses, using remote addresses instead.");
+                LOGGER.debug("No loopback addresses, using remote addresses instead.");
                 communicationAddresses.addAll(inetAddresses.getRemote());
             }
         } else {

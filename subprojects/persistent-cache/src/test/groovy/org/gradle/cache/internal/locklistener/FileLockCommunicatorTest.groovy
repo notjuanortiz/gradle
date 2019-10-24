@@ -17,14 +17,14 @@
 
 package org.gradle.cache.internal.locklistener
 
-import org.gradle.internal.remote.internal.inet.InetAddressFactory
+import org.gradle.internal.net.DefaultInetAddressFactory
 import org.gradle.util.ConcurrentSpecification
 
 import static org.gradle.test.fixtures.ConcurrentTestUtil.poll
 
 class FileLockCommunicatorTest extends ConcurrentSpecification {
 
-    def addressFactory = new InetAddressFactory()
+    def addressFactory = new DefaultInetAddressFactory()
     def communicator = new FileLockCommunicator(addressFactory)
 
     def cleanup() {

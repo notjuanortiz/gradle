@@ -19,13 +19,14 @@ package org.gradle.internal.remote.services;
 import org.gradle.internal.concurrent.ExecutorFactory;
 import org.gradle.internal.id.IdGenerator;
 import org.gradle.internal.id.UUIDGenerator;
+import org.gradle.internal.net.DefaultInetAddressFactory;
+import org.gradle.internal.net.InetAddressFactory;
 import org.gradle.internal.remote.MessagingClient;
 import org.gradle.internal.remote.MessagingServer;
 import org.gradle.internal.remote.internal.IncomingConnector;
 import org.gradle.internal.remote.internal.OutgoingConnector;
 import org.gradle.internal.remote.internal.hub.MessageHubBackedClient;
 import org.gradle.internal.remote.internal.hub.MessageHubBackedServer;
-import org.gradle.internal.remote.internal.inet.InetAddressFactory;
 import org.gradle.internal.remote.internal.inet.TcpIncomingConnector;
 import org.gradle.internal.remote.internal.inet.TcpOutgoingConnector;
 
@@ -46,7 +47,7 @@ public class MessagingServices {
     private final IdGenerator<UUID> idGenerator = new UUIDGenerator();
 
     protected InetAddressFactory createInetAddressFactory() {
-        return new InetAddressFactory();
+        return new DefaultInetAddressFactory();
     }
 
     protected OutgoingConnector createOutgoingConnector() {

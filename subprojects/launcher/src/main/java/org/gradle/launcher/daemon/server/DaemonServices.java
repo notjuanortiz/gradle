@@ -25,7 +25,7 @@ import org.gradle.internal.invocation.BuildAction;
 import org.gradle.internal.logging.LoggingManagerInternal;
 import org.gradle.internal.nativeintegration.ProcessEnvironment;
 import org.gradle.internal.nativeintegration.services.NativeServices;
-import org.gradle.internal.remote.internal.inet.InetAddressFactory;
+import org.gradle.internal.net.InetAddressFactory;
 import org.gradle.internal.serialize.Serializer;
 import org.gradle.internal.service.DefaultServiceRegistry;
 import org.gradle.internal.service.ServiceRegistry;

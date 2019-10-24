@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.gradle.internal.remote.internal.inet
+package org.gradle.internal.net
+
 
 import spock.lang.Ignore
 import spock.lang.Specification
 
 class InetAddressFactoryTest extends Specification {
-    def factory = new InetAddressFactory()
+    def factory = new DefaultInetAddressFactory()
     InetAddresses addresses = Mock()
 
     def setup() {
@@ -88,7 +89,7 @@ class InetAddressFactoryTest extends Specification {
 
     def "Always returns some communication address"() {
         expect:
-        !new InetAddressFactory().communicationAddresses.empty
+        !new DefaultInetAddressFactory().communicationAddresses.empty
     }
 
     private defaultAddresses() {

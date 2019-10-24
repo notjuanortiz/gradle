@@ -21,7 +21,7 @@ import org.gradle.cache.FileLockReleasedSignal;
 import org.gradle.internal.concurrent.ExecutorFactory;
 import org.gradle.internal.concurrent.ManagedExecutor;
 import org.gradle.internal.concurrent.Stoppable;
-import org.gradle.internal.remote.internal.inet.InetAddressFactory;
+import org.gradle.internal.net.InetAddressFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

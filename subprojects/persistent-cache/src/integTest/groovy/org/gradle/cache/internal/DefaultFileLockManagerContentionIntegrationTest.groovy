@@ -26,7 +26,7 @@ import org.gradle.cache.internal.locklistener.FileLockContentionHandler
 import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.integtests.fixtures.executer.GradleHandle
 import org.gradle.internal.concurrent.DefaultExecutorFactory
-import org.gradle.internal.remote.internal.inet.InetAddressFactory
+import org.gradle.internal.net.DefaultInetAddressFactory
 import org.gradle.internal.time.Time
 
 import java.util.concurrent.Executors
@@ -37,7 +37,7 @@ import static org.gradle.test.fixtures.ConcurrentTestUtil.poll
 import static org.gradle.util.TextUtil.escapeString
 
 class DefaultFileLockManagerContentionIntegrationTest extends AbstractIntegrationSpec {
-    def addressFactory = new InetAddressFactory()
+    def addressFactory = new DefaultInetAddressFactory()
 
     FileLockContentionHandler receivingFileLockContentionHandler
     DatagramSocket receivingSocket

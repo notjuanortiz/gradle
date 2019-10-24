@@ -26,7 +26,7 @@ import org.gradle.cache.internal.locklistener.DefaultFileLockContentionHandler
 import org.gradle.cache.internal.locklistener.FileLockContentionHandler
 import org.gradle.internal.concurrent.CompositeStoppable
 import org.gradle.internal.id.LongIdGenerator
-import org.gradle.internal.remote.internal.inet.InetAddressFactory
+import org.gradle.internal.net.DefaultInetAddressFactory
 import org.gradle.test.fixtures.concurrent.ConcurrentSpec
 import org.gradle.test.fixtures.file.TestNameTestDirectoryProvider
 import org.junit.Rule
@@ -38,8 +38,8 @@ import static org.gradle.cache.FileLockManager.LockMode.Shared
 class DefaultFileLockManagerContentionTest extends ConcurrentSpec {
     @Rule
     final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
-    FileLockContentionHandler contentionHandler = new DefaultFileLockContentionHandler(executorFactory, new InetAddressFactory())
-    FileLockContentionHandler contentionHandler2 = new DefaultFileLockContentionHandler(executorFactory, new InetAddressFactory())
+    FileLockContentionHandler contentionHandler = new DefaultFileLockContentionHandler(executorFactory, new DefaultInetAddressFactory())
+    FileLockContentionHandler contentionHandler2 = new DefaultFileLockContentionHandler(executorFactory, new DefaultInetAddressFactory())
     FileLockManager manager = new DefaultFileLockManager(Stub(ProcessMetaDataProvider), 2000, contentionHandler, new LongIdGenerator())
     FileLockManager manager2 = new DefaultFileLockManager(Stub(ProcessMetaDataProvider), 2000, contentionHandler2, new LongIdGenerator())
 

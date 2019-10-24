@@ -16,7 +16,7 @@
 
 package org.gradle.cache.internal.locklistener;
 
-import org.gradle.internal.remote.internal.inet.InetAddressFactory;
+import org.gradle.internal.net.InetAddressFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

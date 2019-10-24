@@ -22,6 +22,7 @@ import org.gradle.internal.concurrent.CompositeStoppable;
 import org.gradle.internal.concurrent.ExecutorFactory;
 import org.gradle.internal.concurrent.ManagedExecutor;
 import org.gradle.internal.id.IdGenerator;
+import org.gradle.internal.net.InetAddressFactory;
 import org.gradle.internal.remote.Address;
 import org.gradle.internal.remote.ConnectionAcceptor;
 import org.gradle.internal.remote.internal.ConnectCompletion;

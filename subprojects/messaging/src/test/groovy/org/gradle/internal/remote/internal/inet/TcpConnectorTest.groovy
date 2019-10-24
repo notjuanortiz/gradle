@@ -17,6 +17,7 @@ package org.gradle.internal.remote.internal.inet
 
 import org.gradle.api.Action
 import org.gradle.internal.id.UUIDGenerator
+import org.gradle.internal.net.DefaultInetAddressFactory
 import org.gradle.internal.remote.internal.ConnectCompletion
 import org.gradle.internal.remote.internal.ConnectException
 import org.gradle.internal.remote.internal.MessageIOException
@@ -39,7 +40,7 @@ import java.nio.channels.SocketChannel
 class TcpConnectorTest extends ConcurrentSpec {
     @Shared def serializer = Serializers.stateful(BaseSerializerFactory.STRING_SERIALIZER)
     final def idGenerator = new UUIDGenerator()
-    final def addressFactory = new InetAddressFactory()
+    final def addressFactory = new DefaultInetAddressFactory()
     final def outgoingConnector = new TcpOutgoingConnector()
     final def incomingConnector = new TcpIncomingConnector(executorFactory, addressFactory, idGenerator)
     @Rule

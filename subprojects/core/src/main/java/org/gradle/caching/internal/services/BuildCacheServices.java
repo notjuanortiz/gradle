@@ -35,6 +35,7 @@ import org.gradle.internal.SystemProperties;
 import org.gradle.internal.hash.StreamHasher;
 import org.gradle.internal.instantiation.InstantiatorFactory;
 import org.gradle.internal.nativeplatform.filesystem.FileSystem;
+import org.gradle.internal.net.InetAddressFactory;
 import org.gradle.internal.operations.BuildOperationExecutor;
 import org.gradle.internal.os.OperatingSystem;
 import org.gradle.internal.scopeids.id.BuildInvocationScopeId;
@@ -60,8 +61,9 @@ public class BuildCacheServices {
     }
 
     OriginMetadataFactory createOriginMetadataFactory(
+        BuildInvocationScopeId buildInvocationScopeId,
         GradleInternal gradleInternal,
-        BuildInvocationScopeId buildInvocationScopeId
+        InetAddressFactory inetAddressFactory
     ) {
         File rootDir = gradleInternal.getRootProject().getRootDir();
         return new OriginMetadataFactory(
@@ -69,6 +71,7 @@ public class BuildCacheServices {
             SystemProperties.getInstance().getUserName(),
             OperatingSystem.current().getName(),
             buildInvocationScopeId.getId().asString(),
+            inetAddressFactory,
             properties -> {
                 properties.setProperty(GRADLE_VERSION_KEY, GradleVersion.current().getVersion());
             }

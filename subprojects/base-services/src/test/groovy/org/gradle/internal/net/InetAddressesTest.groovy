@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.gradle.internal.remote.internal.inet
+package org.gradle.internal.net
 
+import org.gradle.internal.net.InetAddresses
 import org.gradle.util.Requires
 import org.gradle.util.TestPrecondition
 import spock.lang.Specification

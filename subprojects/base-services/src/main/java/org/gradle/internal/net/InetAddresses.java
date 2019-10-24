@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradle.internal.remote.internal.inet;
+package org.gradle.internal.net;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +41,8 @@ class InetAddresses {
 
     private void analyzeNetworkInterfaces() throws SocketException {
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-        if (interfaces != null) {
-            while (interfaces.hasMoreElements()) {
-                analyzeNetworkInterface(interfaces.nextElement());
-            }   
+        while (interfaces.hasMoreElements()) {
+            analyzeNetworkInterface(interfaces.nextElement());
         }
     }
 

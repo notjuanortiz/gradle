@@ -40,7 +40,7 @@ import org.gradle.internal.jvm.inspection.CachingJvmVersionDetector;
 import org.gradle.internal.jvm.inspection.DefaultJvmVersionDetector;
 import org.gradle.internal.jvm.inspection.JvmVersionDetector;
 import org.gradle.internal.nativeintegration.ProcessEnvironment;
-import org.gradle.internal.remote.internal.inet.InetAddressFactory;
+import org.gradle.internal.net.InetAddressFactory;
 import org.gradle.internal.remote.services.MessagingServices;
 import org.gradle.internal.service.ServiceRegistration;
 import org.gradle.process.internal.DefaultExecActionFactory;
