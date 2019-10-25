@@ -16,7 +16,6 @@
 
 package org.gradle.internal.net
 
-import org.gradle.internal.net.InetAddresses
 import org.gradle.util.Requires
 import org.gradle.util.TestPrecondition
 import spock.lang.Specification
