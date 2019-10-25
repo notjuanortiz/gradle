@@ -1,3 +1,12 @@
 {
-    "acceptedApiChanges": []
+    "acceptedApiChanges": [
+        {
+            "type": "org.gradle.api.tasks.testing.AbstractTestTask",
+            "member": "Method org.gradle.api.tasks.testing.AbstractTestTask.getInetAddressFactory()",
+            "acceptation": "Injected service moved",
+            "changes": [
+                "Method return type has changed"
+            ]
+        }
+    ]
 }
