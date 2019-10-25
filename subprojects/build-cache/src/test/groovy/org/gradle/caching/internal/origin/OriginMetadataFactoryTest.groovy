@@ -24,7 +24,7 @@ class OriginMetadataFactoryTest extends Specification {
     def entry = Mock(CacheableEntity)
     def rootDir = Mock(File)
     def buildInvocationId = UUID.randomUUID().toString()
-    def factory = new OriginMetadataFactory(rootDir, "user", "os", new DefaultInetAddressFactory(), buildInvocationId, { it.gradleVersion = "3.0" })
+    def factory = new OriginMetadataFactory(rootDir, "user", "os", buildInvocationId, new DefaultInetAddressFactory(), { it.gradleVersion = "3.0" })
 
     def "converts to origin metadata"() {
         entry.identity >> "identity"
